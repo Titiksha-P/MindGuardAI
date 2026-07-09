@@ -9,18 +9,29 @@ CRISIS_RESOURCES: Dict[str, Any] = load_json("crisis_resources.json")
 def semantic_risk_classifier(message: str) -> Dict[str, Any]:
     """
     Deterministic approximation of semantic risk.
-    This avoids LLM hallucination and keeps the assignment fully custom-code.
+
+    This is intentionally rule-based for the assignment:
+    no LLM decides safety, scoring, or crisis routing.
     """
-    text = message.lower()
+    text = message.lower().strip()
+
     high_risk_fragments = [
         "no reason to live",
         "don't want to be here",
         "want everything to stop",
         "i might do something",
         "i am not safe",
+        "i'm not safe",
+        "not safe right now",
+        "immediate danger",
+        "i am in immediate danger",
+        "i'm in immediate danger",
+        "danger to myself",
         "goodbye forever",
     ]
+
     matched = [fragment for fragment in high_risk_fragments if fragment in text]
+
     return {
         "intent": "immediate_self_harm_risk" if matched else "none",
         "confidence": 0.91 if matched else 0.0,
@@ -30,6 +41,7 @@ def semantic_risk_classifier(message: str) -> Dict[str, Any]:
 
 def check_safety(message: str) -> Dict[str, Any]:
     regex_matches: List[str] = []
+
     for pattern in TRIGGERS["crisis_patterns"]:
         if re.search(pattern, message, flags=re.IGNORECASE):
             regex_matches.append(pattern)
@@ -48,5 +60,12 @@ def check_safety(message: str) -> Dict[str, Any]:
 
 def crisis_response() -> str:
     resources = CRISIS_RESOURCES["resources"]
-    resource_lines = "; ".join([f"{item['name']}: {item['contact']}" for item in resources])
-    return f"{CRISIS_RESOURCES['message']} Resources: {resource_lines}. Emergency: {CRISIS_RESOURCES['emergency']}."
+    resource_lines = "; ".join(
+        [f"{item['name']}: {item['contact']}" for item in resources]
+    )
+
+    return (
+        f"{CRISIS_RESOURCES['message']} "
+        f"Resources: {resource_lines}. "
+        f"Emergency: {CRISIS_RESOURCES['emergency']}."
+    )
