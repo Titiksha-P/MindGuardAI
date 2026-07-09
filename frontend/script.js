@@ -52,6 +52,18 @@ function updateProgress(progressLabel) {
   }
 }
 
+function statusClass(status) {
+  const s = String(status || '').toLowerCase();
+
+  if (s.includes('passed')) return 'status passed';
+  if (s.includes('ok')) return 'status ok';
+  if (s.includes('valid')) return 'status valid';
+  if (s.includes('blocked') || s.includes('override')) return 'status danger';
+  if (s.includes('boundary')) return 'status warning';
+
+  return 'status neutral';
+}
+
 function animateTrace(items) {
   trace.innerHTML = '';
 
@@ -63,9 +75,17 @@ function animateTrace(items) {
   items.forEach((t, index) => {
     setTimeout(() => {
       const li = document.createElement('li');
-      li.textContent = `✓ ${t.step}: ${t.status}`;
+      const step = document.createElement('span');
+      const badge = document.createElement('span');
+
+      step.textContent = `✓ ${t.step}`;
+      badge.textContent = t.status;
+      badge.className = statusClass(t.status);
+
+      li.appendChild(step);
+      li.appendChild(badge);
       trace.appendChild(li);
-    }, index * 220);
+    }, index * 180);
   });
 }
 
@@ -77,7 +97,7 @@ function activatePipeline() {
   steps.forEach((step, index) => {
     setTimeout(() => {
       step.classList.add('active');
-    }, index * 140);
+    }, index * 120);
   });
 }
 
@@ -104,29 +124,57 @@ function renderBehaviour(text) {
   let emotionalTone = 'neutral';
   let interactionStyle = 'guided';
   let responseStyle = 'supportive';
+  let reason = 'No strong behavioural signal detected.';
 
-  if (lower.includes('tired') || lower.includes('exhausted')) {
+  if (lower.includes('tired') || lower.includes('exhausted') || lower.includes('low energy')) {
     emotionalTone = 'low-energy';
     responseStyle = 'gentle';
+    reason = 'Detected low-energy language.';
   } else if (lower.includes('stress') || lower.includes('overwhelmed') || lower.includes('pressure')) {
     emotionalTone = 'stressed';
     responseStyle = 'calming';
+    reason = 'Detected stress-related language.';
   } else if (lower.includes('confused') || lower.includes('not sure') || lower.includes('unclear')) {
     interactionStyle = 'step-by-step';
     responseStyle = 'clear and structured';
+    reason = 'Detected uncertainty or confusion.';
   } else if (lower.includes('angry') || lower.includes('frustrated')) {
     emotionalTone = 'frustrated';
     responseStyle = 'grounded';
+    reason = 'Detected frustration-related language.';
   } else if (['0', '1', '2', '3'].includes(lower.trim())) {
-    emotionalTone = 'screening response';
-    interactionStyle = 'guided';
-    responseStyle = 'structured';
+    const value = Number(lower.trim());
+
+    if (value === 0) {
+      emotionalTone = 'stable response';
+      responseStyle = 'concise';
+      reason = 'PHQ answer indicates no frequency for this item.';
+    } else if (value === 1) {
+      emotionalTone = 'mild concern';
+      responseStyle = 'supportive';
+      reason = 'PHQ answer indicates occasional frequency.';
+    } else if (value === 2) {
+      emotionalTone = 'moderate concern';
+      responseStyle = 'gentle and structured';
+      reason = 'PHQ answer indicates frequent occurrence.';
+    } else if (value === 3) {
+      emotionalTone = 'high concern';
+      responseStyle = 'careful and validating';
+      reason = 'PHQ answer indicates near-daily occurrence.';
+    }
+  }
+
+  if (currentScore >= 10) {
+    interactionStyle = 'step-by-step';
+    responseStyle = 'careful and structured';
+    reason += ' Current PHQ score suggests using a more careful tone.';
   }
 
   behaviour.innerHTML = `
-    <strong>Emotional tone:</strong> ${emotionalTone}<br>
-    <strong>Interaction style:</strong> ${interactionStyle}<br>
-    <strong>Response style:</strong> ${responseStyle}<br>
+    <strong>Emotional tone:</strong> <span class="behaviourChip">${emotionalTone}</span><br>
+    <strong>Interaction style:</strong> <span class="behaviourChip">${interactionStyle}</span><br>
+    <strong>Response style:</strong> <span class="behaviourChip">${responseStyle}</span><br>
+    <small>${reason}</small><br>
     <small>This layer does not affect PHQ-9 scoring or diagnosis.</small>
   `;
 }
@@ -144,9 +192,7 @@ function updateScoreAndSeverity(data, userText) {
 
   scoreValue.textContent = String(currentScore);
 
-  if (currentScore === 0) {
-    severityValue.textContent = 'Minimal';
-  } else if (currentScore <= 4) {
+  if (currentScore <= 4) {
     severityValue.textContent = 'Minimal';
   } else if (currentScore <= 9) {
     severityValue.textContent = 'Mild';
@@ -190,8 +236,8 @@ async function startSession() {
   updateProgress(data.progress || 'Question 1 of 9');
   renderOptions(data.answer_options);
   animateTrace(data.decision_trace || [
-    { step: 'Session', status: 'created' },
-    { step: 'PHQ-9', status: 'first question loaded' }
+    { step: 'Session created', status: 'ok' },
+    { step: 'PHQ-9 first question loaded', status: 'ok' }
   ]);
   activatePipeline();
 }
@@ -202,7 +248,6 @@ async function sendMessage(text) {
   }
 
   addBubble(text, 'user');
-  renderBehaviour(text);
   activatePipeline();
 
   const res = await fetch('/chat/message', {
@@ -224,6 +269,7 @@ async function sendMessage(text) {
 
   updateProgress(data.progress || (data.session_complete ? 'Complete' : data.response_type));
   updateScoreAndSeverity(data, text);
+  renderBehaviour(text);
 
   renderOptions(data.answer_options);
   animateTrace(data.decision_trace);
