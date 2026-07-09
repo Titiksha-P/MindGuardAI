@@ -12,12 +12,17 @@
       <div>
         <p class="eyebrow">Custom-code clinical-safety prototype</p>
         <h1>MindGuard AI</h1>
-        <p class="subtitle">Deterministic PHQ-9 screening with DSM-5-informed, non-diagnostic symptom-domain profiling and safety-first crisis override.</p>
+        <p class="subtitle">Safety-first mental wellness screening prototype with deterministic PHQ-9 scoring, DSM-5-informed non-diagnostic profiling, and decision tracing.</p>
         <div class="badges">
           <span>FastAPI</span><span>Rule Engine</span><span>Decision Trace</span><span>No-code banned</span>
         </div>
       </div>
-      <button id="startBtn">Start private check-in</button>
+
+      <div class="heroActions">
+        <button id="startBtn">Start Check-in</button>
+        <a class="linkBtn" href="/docs" target="_blank">View API Docs</a>
+        <a class="linkBtn" href="/admin/compliance" target="_blank">View Compliance Report</a>
+      </div>
     </section>
 
     <section class="grid">
@@ -26,10 +31,18 @@
           <strong>Conversational Screening</strong>
           <span id="progress">Not started</span>
         </div>
+
         <div id="messages" class="messages">
           <div class="bot bubble">Click start to begin. This tool does not diagnose medical conditions.</div>
         </div>
+
         <div id="options" class="options"></div>
+
+        <div class="demoActions">
+          <button id="legalTestBtn">Test Legal Boundary</button>
+          <button id="safetyTestBtn">Test Safety Override</button>
+        </div>
+
         <div class="inputRow">
           <input id="messageInput" placeholder="Type 0, 1, 2, 3 or a quick-reply label" />
           <button id="sendBtn">Send</button>
@@ -37,15 +50,24 @@
       </div>
 
       <aside class="glass panel">
-        <h2>Live Decision Graph</h2>
+        <h2>Live Decision Trace</h2>
         <ol id="trace" class="trace">
           <li>Waiting for input</li>
         </ol>
+
         <h2>DSM-5-informed Profile</h2>
         <div id="profile" class="profile">No screening data yet.</div>
+
+        <h2>Behavioural Context Layer</h2>
+        <div id="behaviour" class="profile">
+          <strong>Emotional tone:</strong> neutral<br>
+          <strong>Interaction style:</strong> guided<br>
+          <strong>Response style:</strong> supportive
+        </div>
       </aside>
     </section>
   </main>
+
   <script src="script.js"></script>
 </body>
 </html>
