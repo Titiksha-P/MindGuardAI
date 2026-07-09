@@ -1,0 +1,16 @@
+{
+  "crisis_patterns": [
+    "\\bkill myself\\b",
+    "\\bend my life\\b",
+    "\\bsuicide\\b",
+    "\\bhurt myself\\b",
+    "\\bself harm\\b",
+    "\\bi want to die\\b",
+    "\\bcan't go on\\b",
+    "\\bbetter off dead\\b"
+  ],
+  "high_risk_intents": [
+    "immediate_self_harm_risk",
+    "severe_suicidal_ideation"
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "minimal": {"min": 0, "max": 4},
+  "mild": {"min": 5, "max": 9},
+  "moderate": {"min": 10, "max": 14},
+  "moderately_severe": {"min": 15, "max": 19},
+  "severe": {"min": 20, "max": 27}
+}

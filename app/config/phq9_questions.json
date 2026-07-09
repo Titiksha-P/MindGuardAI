@@ -1,0 +1,11 @@
+[
+  {"id": 1, "text": "Over the last 2 weeks, how often have you had little interest or pleasure in doing things?"},
+  {"id": 2, "text": "Over the last 2 weeks, how often have you felt down, depressed, or hopeless?"},
+  {"id": 3, "text": "Over the last 2 weeks, how often have you had trouble falling or staying asleep, or sleeping too much?"},
+  {"id": 4, "text": "Over the last 2 weeks, how often have you felt tired or had little energy?"},
+  {"id": 5, "text": "Over the last 2 weeks, how often have you had poor appetite or overeating?"},
+  {"id": 6, "text": "Over the last 2 weeks, how often have you felt bad about yourself — or that you are a failure or have let yourself or your family down?"},
+  {"id": 7, "text": "Over the last 2 weeks, how often have you had trouble concentrating on things, such as reading or watching something?"},
+  {"id": 8, "text": "Over the last 2 weeks, how often have you moved or spoken so slowly that other people could have noticed, or been so fidgety or restless that you moved around a lot more than usual?"},
+  {"id": 9, "text": "Over the last 2 weeks, how often have you had thoughts that you would be better off dead or of hurting yourself in some way?"}
+]

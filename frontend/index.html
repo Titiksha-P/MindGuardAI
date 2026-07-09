@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MindGuard AI</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="shell">
+    <section class="hero glass">
+      <div>
+        <p class="eyebrow">Custom-code clinical-safety prototype</p>
+        <h1>MindGuard AI</h1>
+        <p class="subtitle">Deterministic PHQ-9 screening with DSM-5-informed, non-diagnostic symptom-domain profiling and safety-first crisis override.</p>
+        <div class="badges">
+          <span>FastAPI</span><span>Rule Engine</span><span>Decision Trace</span><span>No-code banned</span>
+        </div>
+      </div>
+      <button id="startBtn">Start private check-in</button>
+    </section>
+
+    <section class="grid">
+      <div class="chat glass">
+        <div class="chatTop">
+          <strong>Conversational Screening</strong>
+          <span id="progress">Not started</span>
+        </div>
+        <div id="messages" class="messages">
+          <div class="bot bubble">Click start to begin. This tool does not diagnose medical conditions.</div>
+        </div>
+        <div id="options" class="options"></div>
+        <div class="inputRow">
+          <input id="messageInput" placeholder="Type 0, 1, 2, 3 or a quick-reply label" />
+          <button id="sendBtn">Send</button>
+        </div>
+      </div>
+
+      <aside class="glass panel">
+        <h2>Live Decision Graph</h2>
+        <ol id="trace" class="trace">
+          <li>Waiting for input</li>
+        </ol>
+        <h2>DSM-5-informed Profile</h2>
+        <div id="profile" class="profile">No screening data yet.</div>
+      </aside>
+    </section>
+  </main>
+  <script src="script.js"></script>
+</body>
+</html>

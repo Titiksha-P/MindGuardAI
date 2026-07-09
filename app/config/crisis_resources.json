@@ -1,0 +1,8 @@
+{
+  "country": "India",
+  "emergency": "112",
+  "resources": [
+    {"name": "Tele MANAS", "contact": "14416", "website": "https://telemanas.mohfw.gov.in/home"}
+  ],
+  "message": "I can't continue a normal chatbot flow here. Please contact emergency support now, reach out to someone you trust nearby, or call an official helpline."
+}

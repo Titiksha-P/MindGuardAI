@@ -1,0 +1,57 @@
+{
+  "framework_name": "DSM-5-informed cognitive and affective symptom-domain profiling",
+  "clinical_boundary": "This layer is non-diagnostic. It maps observed PHQ-9 item responses into symptom domains commonly discussed in DSM-5 depressive-disorder clinical interviews, but it does not diagnose any medical condition.",
+  "domains": {
+    "anhedonia": {
+      "label": "Interest and pleasure domain",
+      "items": [1],
+      "description": "Tracks reduced interest or pleasure signals from structured screening responses."
+    },
+    "depressed_mood": {
+      "label": "Mood domain",
+      "items": [2],
+      "description": "Tracks low mood or hopelessness signals from structured screening responses."
+    },
+    "sleep": {
+      "label": "Sleep domain",
+      "items": [3],
+      "description": "Tracks sleep disruption signals."
+    },
+    "energy": {
+      "label": "Energy domain",
+      "items": [4],
+      "description": "Tracks fatigue or low-energy signals."
+    },
+    "appetite": {
+      "label": "Appetite domain",
+      "items": [5],
+      "description": "Tracks appetite-related changes."
+    },
+    "self_evaluation": {
+      "label": "Self-evaluation domain",
+      "items": [6],
+      "description": "Tracks negative self-evaluation signals."
+    },
+    "concentration": {
+      "label": "Cognition and concentration domain",
+      "items": [7],
+      "description": "Tracks concentration difficulty signals."
+    },
+    "psychomotor": {
+      "label": "Psychomotor domain",
+      "items": [8],
+      "description": "Tracks observable slowing or restlessness signals."
+    },
+    "risk_item": {
+      "label": "Safety-risk screening domain",
+      "items": [9],
+      "description": "Tracks whether the safety-related PHQ-9 item was endorsed. Any non-zero value triggers a conservative safety flag."
+    }
+  },
+  "activation_thresholds": {
+    "none": 0,
+    "mild_signal": 1,
+    "moderate_signal": 2,
+    "high_signal": 3
+  }
+}
