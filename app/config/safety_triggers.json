@@ -3,11 +3,21 @@
     "\\bkill myself\\b",
     "\\bend my life\\b",
     "\\bsuicide\\b",
+    "\\bsuicidal\\b",
+    "\\bi am suicidal\\b",
+    "\\bi'm suicidal\\b",
     "\\bhurt myself\\b",
     "\\bself harm\\b",
     "\\bi want to die\\b",
     "\\bcan't go on\\b",
-    "\\bbetter off dead\\b"
+    "\\bbetter off dead\\b",
+    "\\bi am not safe\\b",
+    "\\bi'm not safe\\b",
+    "\\bnot safe right now\\b",
+    "\\bimmediate danger\\b",
+    "\\bi am in immediate danger\\b",
+    "\\bi'm in immediate danger\\b",
+    "\\bdanger to myself\\b"
   ],
   "high_risk_intents": [
     "immediate_self_harm_risk",
