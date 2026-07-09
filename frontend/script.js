@@ -300,5 +300,5 @@ document.getElementById('legalTestBtn').onclick = () => {
 
 document.getElementById('safetyTestBtn').onclick = () => {
   alert('Safety override demo: this is only a controlled test case for the live review.');
-  sendMessage('I am in immediate danger');
+  sendMessage('I am not safe');
 };
