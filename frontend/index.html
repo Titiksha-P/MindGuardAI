@@ -9,12 +9,19 @@
 <body>
   <main class="shell">
     <section class="hero glass">
-      <div>
+      <div class="heroCopy">
         <p class="eyebrow">Custom-code clinical-safety prototype</p>
         <h1>MindGuard AI</h1>
-        <p class="subtitle">Safety-first mental wellness screening prototype with deterministic PHQ-9 scoring, DSM-5-informed non-diagnostic profiling, and decision tracing.</p>
+        <p class="heroLine">An explainable, deterministic mental wellness screening prototype built for safe human-AI interaction.</p>
+        <p class="subtitle">
+          Safety-first mental wellness screening prototype with deterministic PHQ-9 scoring,
+          DSM-5-informed non-diagnostic profiling, behavioural context adaptation, and decision tracing.
+        </p>
         <div class="badges">
-          <span>FastAPI</span><span>Rule Engine</span><span>Decision Trace</span><span>No-code banned</span>
+          <span>FastAPI</span>
+          <span>Rule Engine</span>
+          <span>Decision Trace</span>
+          <span>No-code banned</span>
         </div>
       </div>
 
@@ -28,8 +35,15 @@
     <section class="grid">
       <div class="chat glass">
         <div class="chatTop">
-          <strong>Conversational Screening</strong>
+          <div>
+            <strong>Conversational Screening</strong>
+            <div class="miniLabel" id="progressText">Waiting to begin</div>
+          </div>
           <span id="progress">Not started</span>
+        </div>
+
+        <div class="progressWrap">
+          <div id="progressBar" class="progressBar"></div>
         </div>
 
         <div id="messages" class="messages">
@@ -50,6 +64,27 @@
       </div>
 
       <aside class="glass panel">
+        <section class="metricGrid">
+          <div class="metricCard">
+            <span>PHQ Score</span>
+            <strong id="scoreValue">0</strong>
+          </div>
+          <div class="metricCard">
+            <span>Severity</span>
+            <strong id="severityValue">Not started</strong>
+          </div>
+        </section>
+
+        <h2>Current Pipeline</h2>
+        <div id="pipeline" class="pipeline">
+          <span>Safety</span>
+          <span>Legal</span>
+          <span>Behaviour</span>
+          <span>PHQ-9</span>
+          <span>DSM</span>
+          <span>Response</span>
+        </div>
+
         <h2>Live Decision Trace</h2>
         <ol id="trace" class="trace">
           <li>Waiting for input</li>
@@ -62,7 +97,8 @@
         <div id="behaviour" class="profile">
           <strong>Emotional tone:</strong> neutral<br>
           <strong>Interaction style:</strong> guided<br>
-          <strong>Response style:</strong> supportive
+          <strong>Response style:</strong> supportive<br>
+          <small>This layer does not affect PHQ-9 scoring or diagnosis.</small>
         </div>
       </aside>
     </section>
