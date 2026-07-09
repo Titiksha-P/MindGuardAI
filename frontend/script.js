@@ -1,11 +1,18 @@
 let sessionId = null;
+let currentScore = 0;
+let currentQuestionNumber = 0;
 
 const messages = document.getElementById('messages');
 const options = document.getElementById('options');
 const progress = document.getElementById('progress');
+const progressText = document.getElementById('progressText');
+const progressBar = document.getElementById('progressBar');
 const trace = document.getElementById('trace');
 const profile = document.getElementById('profile');
 const behaviour = document.getElementById('behaviour');
+const scoreValue = document.getElementById('scoreValue');
+const severityValue = document.getElementById('severityValue');
+const pipeline = document.getElementById('pipeline');
 
 function addBubble(text, who = 'bot') {
   const div = document.createElement('div');
@@ -26,7 +33,26 @@ function renderOptions(answerOptions) {
   });
 }
 
-function renderTrace(items) {
+function updateProgress(progressLabel) {
+  if (!progressLabel) return;
+
+  progress.textContent = progressLabel;
+  progressText.textContent = progressLabel;
+
+  const match = progressLabel.match(/(\d+)\s*(?:of|\/)\s*9/i);
+
+  if (match) {
+    currentQuestionNumber = Number(match[1]);
+    const percent = Math.min((currentQuestionNumber / 9) * 100, 100);
+    progressBar.style.width = `${percent}%`;
+  }
+
+  if (progressLabel.toLowerCase().includes('complete')) {
+    progressBar.style.width = '100%';
+  }
+}
+
+function animateTrace(items) {
   trace.innerHTML = '';
 
   if (!items || !items.length) {
@@ -34,10 +60,24 @@ function renderTrace(items) {
     return;
   }
 
-  items.forEach(t => {
-    const li = document.createElement('li');
-    li.textContent = `✓ ${t.step}: ${t.status}`;
-    trace.appendChild(li);
+  items.forEach((t, index) => {
+    setTimeout(() => {
+      const li = document.createElement('li');
+      li.textContent = `✓ ${t.step}: ${t.status}`;
+      trace.appendChild(li);
+    }, index * 220);
+  });
+}
+
+function activatePipeline() {
+  const steps = pipeline.querySelectorAll('span');
+
+  steps.forEach(step => step.classList.remove('active'));
+
+  steps.forEach((step, index) => {
+    setTimeout(() => {
+      step.classList.add('active');
+    }, index * 140);
   });
 }
 
@@ -68,15 +108,19 @@ function renderBehaviour(text) {
   if (lower.includes('tired') || lower.includes('exhausted')) {
     emotionalTone = 'low-energy';
     responseStyle = 'gentle';
-  } else if (lower.includes('stress') || lower.includes('overwhelmed')) {
+  } else if (lower.includes('stress') || lower.includes('overwhelmed') || lower.includes('pressure')) {
     emotionalTone = 'stressed';
     responseStyle = 'calming';
-  } else if (lower.includes('confused') || lower.includes('not sure')) {
+  } else if (lower.includes('confused') || lower.includes('not sure') || lower.includes('unclear')) {
     interactionStyle = 'step-by-step';
     responseStyle = 'clear and structured';
   } else if (lower.includes('angry') || lower.includes('frustrated')) {
     emotionalTone = 'frustrated';
     responseStyle = 'grounded';
+  } else if (['0', '1', '2', '3'].includes(lower.trim())) {
+    emotionalTone = 'screening response';
+    interactionStyle = 'guided';
+    responseStyle = 'structured';
   }
 
   behaviour.innerHTML = `
@@ -87,6 +131,42 @@ function renderBehaviour(text) {
   `;
 }
 
+function updateScoreAndSeverity(data, userText) {
+  const numeric = Number(userText);
+
+  if (!Number.isNaN(numeric) && numeric >= 0 && numeric <= 3 && !data.response_type?.includes('legal')) {
+    currentScore += numeric;
+  }
+
+  if (data.total_score !== undefined) {
+    currentScore = data.total_score;
+  }
+
+  scoreValue.textContent = String(currentScore);
+
+  if (currentScore === 0) {
+    severityValue.textContent = 'Minimal';
+  } else if (currentScore <= 4) {
+    severityValue.textContent = 'Minimal';
+  } else if (currentScore <= 9) {
+    severityValue.textContent = 'Mild';
+  } else if (currentScore <= 14) {
+    severityValue.textContent = 'Moderate';
+  } else if (currentScore <= 19) {
+    severityValue.textContent = 'Moderately severe';
+  } else {
+    severityValue.textContent = 'Severe';
+  }
+
+  if (data.response_type && data.response_type.includes('safety')) {
+    severityValue.textContent = 'Safety override';
+  }
+
+  if (data.response_type && data.response_type.includes('legal')) {
+    severityValue.textContent = 'Legal boundary';
+  }
+}
+
 async function startSession() {
   const res = await fetch('/session/start', {
     method: 'POST',
@@ -95,15 +175,25 @@ async function startSession() {
   });
 
   const data = await res.json();
+
   sessionId = data.session_id;
+  currentScore = 0;
+  currentQuestionNumber = 1;
 
   messages.innerHTML = '';
   addBubble(data.message);
   addBubble(data.question.text);
 
-  progress.textContent = data.progress;
+  scoreValue.textContent = '0';
+  severityValue.textContent = 'Minimal';
+
+  updateProgress(data.progress || 'Question 1 of 9');
   renderOptions(data.answer_options);
-  renderTrace(data.decision_trace);
+  animateTrace(data.decision_trace || [
+    { step: 'Session', status: 'created' },
+    { step: 'PHQ-9', status: 'first question loaded' }
+  ]);
+  activatePipeline();
 }
 
 async function sendMessage(text) {
@@ -113,6 +203,7 @@ async function sendMessage(text) {
 
   addBubble(text, 'user');
   renderBehaviour(text);
+  activatePipeline();
 
   const res = await fetch('/chat/message', {
     method: 'POST',
@@ -131,10 +222,11 @@ async function sendMessage(text) {
     addBubble(data.question.text);
   }
 
-  progress.textContent = data.progress || (data.session_complete ? 'Complete' : data.response_type);
+  updateProgress(data.progress || (data.session_complete ? 'Complete' : data.response_type));
+  updateScoreAndSeverity(data, text);
 
   renderOptions(data.answer_options);
-  renderTrace(data.decision_trace);
+  animateTrace(data.decision_trace);
   renderProfile(data.dsm5_profile);
 }
 
