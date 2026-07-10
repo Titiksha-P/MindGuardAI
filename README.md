@@ -15,19 +15,41 @@ MindGuard AI was developed as a technical assignment to demonstrate backend arch
 
 # Live Demo
 
-Once deployed on Render, the project can be accessed here:
+Once deployed, the project can be accessed through the following endpoints:
 
-**Demo UI**  
-https://YOUR_RENDER_URL.onrender.com/app
+### Demo UI
+https://mindguardai-vuom.onrender.com/app/
 
-**Interactive API Documentation**  
-https://YOUR_RENDER_URL.onrender.com/docs
+The interactive frontend demonstrates:
+- PHQ-9 conversational screening
+- Adaptive Conversation Strategy Engine
+- Live Explainability Timeline
+- Behavioural Context Layer
+- Real-time PHQ-9 score updates
+- DSM-5-informed non-diagnostic profiling
+- Conversation Summary
+- Safety Override and Legal Boundary demonstrations
 
-**Compliance Report**  
-https://YOUR_RENDER_URL.onrender.com/admin/compliance
+---
 
-**Health Check**  
-https://YOUR_RENDER_URL.onrender.com/health
+### Interactive API Documentation
+https://mindguardai-vuom.onrender.com/docs
+
+Swagger/OpenAPI interface for exploring and testing all REST endpoints.
+
+---
+
+### Compliance Report
+https://mindguardai-vuom.onrender.com/admin/compliance
+
+Displays the implemented assignment requirements, compliance status, and supporting evidence.
+
+---
+
+### Health Check
+https://mindguardai-vuom.onrender.com/health
+
+Verifies that the backend service is running correctly.
 
 ---
 
